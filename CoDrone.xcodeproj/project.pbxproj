@@ -7,21 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18488FA91DF2F15000396B7A /* BTDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18488FA81DF2F15000396B7A /* BTDiscovery.swift */; };
+		18488FAB1DF2F1EB00396B7A /* BTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18488FAA1DF2F1EB00396B7A /* BTService.swift */; };
 		18CBCCE41DEB36D500EFBBD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CBCCE31DEB36D500EFBBD2 /* AppDelegate.swift */; };
-		18CBCCE61DEB36D500EFBBD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CBCCE51DEB36D500EFBBD2 /* ViewController.swift */; };
 		18CBCCE91DEB36D500EFBBD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18CBCCE71DEB36D500EFBBD2 /* Main.storyboard */; };
 		18CBCCEB1DEB36D500EFBBD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18CBCCEA1DEB36D500EFBBD2 /* Assets.xcassets */; };
 		18CBCCEE1DEB36D500EFBBD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18CBCCEC1DEB36D500EFBBD2 /* LaunchScreen.storyboard */; };
+		18CBCCF61DEB404800EFBBD2 /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CBCCF51DEB404800EFBBD2 /* ConnectViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18488FA81DF2F15000396B7A /* BTDiscovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTDiscovery.swift; sourceTree = "<group>"; };
+		18488FAA1DF2F1EB00396B7A /* BTService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTService.swift; sourceTree = "<group>"; };
 		18CBCCE01DEB36D500EFBBD2 /* CoDrone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoDrone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CBCCE31DEB36D500EFBBD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		18CBCCE51DEB36D500EFBBD2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		18CBCCE81DEB36D500EFBBD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		18CBCCEA1DEB36D500EFBBD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		18CBCCED1DEB36D500EFBBD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		18CBCCEF1DEB36D500EFBBD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18CBCCF51DEB404800EFBBD2 /* ConnectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +39,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18488FA71DF2F08E00396B7A /* BTManager */ = {
+			isa = PBXGroup;
+			children = (
+				18488FA81DF2F15000396B7A /* BTDiscovery.swift */,
+				18488FAA1DF2F1EB00396B7A /* BTService.swift */,
+			);
+			name = BTManager;
+			sourceTree = "<group>";
+		};
 		18CBCCD71DEB36D500EFBBD2 = {
 			isa = PBXGroup;
 			children = (
@@ -54,9 +67,10 @@
 		18CBCCE21DEB36D500EFBBD2 /* CoDrone */ = {
 			isa = PBXGroup;
 			children = (
+				18488FA71DF2F08E00396B7A /* BTManager */,
 				18CBCCE31DEB36D500EFBBD2 /* AppDelegate.swift */,
-				18CBCCE51DEB36D500EFBBD2 /* ViewController.swift */,
 				18CBCCE71DEB36D500EFBBD2 /* Main.storyboard */,
+				18CBCCF51DEB404800EFBBD2 /* ConnectViewController.swift */,
 				18CBCCEA1DEB36D500EFBBD2 /* Assets.xcassets */,
 				18CBCCEC1DEB36D500EFBBD2 /* LaunchScreen.storyboard */,
 				18CBCCEF1DEB36D500EFBBD2 /* Info.plist */,
@@ -91,7 +105,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = DaveVo;
 				TargetAttributes = {
 					18CBCCDF1DEB36D500EFBBD2 = {
@@ -137,8 +151,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18CBCCE61DEB36D500EFBBD2 /* ViewController.swift in Sources */,
 				18CBCCE41DEB36D500EFBBD2 /* AppDelegate.swift in Sources */,
+				18488FAB1DF2F1EB00396B7A /* BTService.swift in Sources */,
+				18488FA91DF2F15000396B7A /* BTDiscovery.swift in Sources */,
+				18CBCCF61DEB404800EFBBD2 /* ConnectViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,6 +198,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -231,6 +248,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -261,6 +279,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = QCBK6P7M2R;
 				INFOPLIST_FILE = CoDrone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drm.CoDrone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -274,6 +293,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = QCBK6P7M2R;
 				INFOPLIST_FILE = CoDrone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drm.CoDrone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -300,6 +320,7 @@
 				18CBCCF41DEB36D500EFBBD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
