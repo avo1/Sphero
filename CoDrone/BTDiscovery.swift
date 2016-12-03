@@ -18,6 +18,7 @@ class BTDiscovery: NSObject, CBCentralManagerDelegate {
     
     fileprivate var centralManager: CBCentralManager?
     fileprivate var peripheralBLE: CBPeripheral?
+    var deviceName = ""
     
     override init() {
         super.init()
@@ -28,7 +29,7 @@ class BTDiscovery: NSObject, CBCentralManagerDelegate {
     
     func startScanning() {
         if let central = centralManager {
-            central.scanForPeripherals(withServices: [DRONE_SERVICE_UUID], options: nil)
+            central.scanForPeripherals(withServices: nil, options: nil)
         }
     }
     
@@ -42,12 +43,45 @@ class BTDiscovery: NSObject, CBCentralManagerDelegate {
     
     // MARK: - CBCentralManagerDelegate
     
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch (central.state) {
+        case .poweredOff:
+            self.clearDevices()
+            
+        case .unauthorized:
+            // Indicate to user that the iOS device does not support BLE.
+            break
+            
+        case .unknown:
+            // Wait for another event
+            break
+            
+        case .poweredOn:
+            print("Bluetooth is On and ready.")
+            self.startScanning()
+            
+        case .resetting:
+            self.clearDevices()
+            
+        case .unsupported:
+            break
+        }
+    }
+    
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         // Be sure to retain the peripheral or it will fail during connection.
         
         // Validate peripheral information
         if ((peripheral.name == nil) || (peripheral.name == "")) {
             return
+        }
+        
+        // Get the device name
+        let device = (advertisementData as NSDictionary).object(forKey: CBAdvertisementDataLocalNameKey)
+            as? String
+        
+        if let device = device  {
+            deviceName = device
         }
         
         // If not already connected to a peripheral, then connect to this one
@@ -93,29 +127,7 @@ class BTDiscovery: NSObject, CBCentralManagerDelegate {
         self.peripheralBLE = nil
     }
     
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        switch (central.state) {
-        case .poweredOff:
-            self.clearDevices()
-            
-        case .unauthorized:
-            // Indicate to user that the iOS device does not support BLE.
-            break
-            
-        case .unknown:
-            // Wait for another event
-            break
-            
-        case .poweredOn:
-            self.startScanning()
-            
-        case .resetting:
-            self.clearDevices()
-            
-        case .unsupported:
-            break
-        }
-    }
+    
     
 }
 

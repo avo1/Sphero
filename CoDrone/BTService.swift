@@ -22,7 +22,7 @@ let BLEServiceChangedStatusNotification = "kBLEServiceChangedStatusNotification"
 
 class BTService: NSObject, CBPeripheralDelegate {
     var peripheral: CBPeripheral?
-    var positionCharacteristic: CBCharacteristic?
+    var writeCommandCharacteristic: CBCharacteristic?
     
     init(initWithPeripheral peripheral: CBPeripheral) {
         super.init()
@@ -51,7 +51,7 @@ class BTService: NSObject, CBPeripheralDelegate {
     // Mark: - CBPeripheralDelegate
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        let uuidsForBTService: [CBUUID] = [PositionCharUUID]
+        let uuidsForBTService: [CBUUID] = [DRONE_DATA_UUID, DRONE_CONF_UUID]
         
         if (peripheral != self.peripheral) {
             // Wrong Peripheral
@@ -68,7 +68,7 @@ class BTService: NSObject, CBPeripheralDelegate {
         }
         
         for service in peripheral.services! {
-            if service.uuid == BLEServiceUUID {
+            if service.uuid == DRONE_SERVICE_UUID {
                 peripheral.discoverCharacteristics(uuidsForBTService, for: service)
             }
         }
@@ -85,10 +85,10 @@ class BTService: NSObject, CBPeripheralDelegate {
         }
         
         if let characteristics = service.characteristics {
-            for characteristic in characteristics {
-                if characteristic.uuid == PositionCharUUID {
-                    self.positionCharacteristic = (characteristic)
-                    peripheral.setNotifyValue(true, for: characteristic)
+            for aChar in characteristics {
+                if aChar.uuid == DRONE_CONF_UUID {
+                    self.writeCommandCharacteristic = aChar
+                    peripheral.setNotifyValue(true, for: aChar)
                     
                     // Send notification that Bluetooth is connected and all required characteristics are discovered
                     self.sendBTServiceNotificationWithIsBluetoothConnected(true)
@@ -99,11 +99,11 @@ class BTService: NSObject, CBPeripheralDelegate {
     
     // Mark: - Private
     
-    func writePosition(_ position: UInt8) {
+    func writeCommand(_ command: [UInt8]) {
         // See if characteristic has been discovered before writing to it
-        if let positionCharacteristic = self.positionCharacteristic {
-            let data = Data(bytes: [position])
-            self.peripheral?.writeValue(data, for: positionCharacteristic, type: CBCharacteristicWriteType.withResponse)
+        if let writeCommandCharacteristic = self.writeCommandCharacteristic {
+            let data = Data(bytes: command)
+            self.peripheral?.writeValue(data, for: writeCommandCharacteristic, type: CBCharacteristicWriteType.withResponse)
         }
     }
     
