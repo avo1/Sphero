@@ -107,7 +107,12 @@ class BTService: NSObject, CBPeripheralDelegate {
         
         if characteristic.uuid == DRONE_DATA_UUID {
             if let data = characteristic.value {
+                let firstByte = data.first
+                if firstByte == 0x02 { // ack signal from drone
+                    return
+                }
                 batteryPercentage = UInt8(data.last!)
+               
                 // Send notification that battery status is constantly updated
                 self.sendBTServiceNotificationWithBatteryStatus(batteryPercentage)
             }

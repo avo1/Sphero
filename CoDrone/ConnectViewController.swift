@@ -25,6 +25,7 @@ class ConnectViewController: UIViewController {
     
     var isFlying = false
     var isConnected = false
+    var isExhaused = false  // battery < critical level
     
     var joystickRadius: CGFloat!
     var leftButtonCenter: CGPoint!
@@ -33,11 +34,16 @@ class ConnectViewController: UIViewController {
     // For transmission
     var timerTXDelay: Timer?
     var timerBatteryCheck: Timer?
-    var allowTX = true
+    
     var throttle: Int8 = 0
     var yaw: Int8 = 0
     var pitch: Int8 = 0
     var roll: Int8 = 0
+    
+    var preThrottle: Int8 = 0
+    var preYaw: Int8 = 0
+    var prePitch: Int8 = 0
+    var preRoll: Int8 = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,7 +107,8 @@ class ConnectViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.stopTimerTXDelay()
+        timerTXDelay?.invalidate()
+        timerBatteryCheck?.invalidate()
     }
     
     func connectionChanged(_ notification: Notification) {
@@ -116,7 +123,7 @@ class ConnectViewController: UIViewController {
                     
                     if connected {
                         self.deviceLabel.text = btDiscoverySharedInstance.deviceName
-                        self.statusLabel.text = "Drone is connected"
+                        self.statusLabel.text = "Connected"
                         
                         SwiftSpinner.sharedInstance.innerColor = UIColor.green.withAlphaComponent(0.5)
                         SwiftSpinner.show("Connected", animated: false).delay(0.7, completion: {
@@ -138,10 +145,11 @@ class ConnectViewController: UIViewController {
                         })
                         
                     } else {
-                        self.statusLabel.text = "Drone is disconnected"
+                        self.statusLabel.text = "Disconnected"
                         self.isFlying = false
                         self.flightButton.setImage(UIImage(named: "takeoff"), for: UIControlState.normal)
-                        
+                        self.timerBatteryCheck?.invalidate()
+                        self.resetControl()
                     }
                 }
             })
@@ -162,12 +170,19 @@ class ConnectViewController: UIViewController {
                         self.batteryLabel.text = String(battery) + " %"
                     }
                     
-                    if battery > DroneCmd.batteryCriticalLevel {
+                    if battery > DroneCmd.batteryWarningLevel {
+                        self.isExhaused = false
                         self.batteryImage.image = UIImage(named: "greenBattery")
                         self.batteryLabel.textColor = UIColor.init(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
                     } else {
+                        self.isExhaused = false
                         self.batteryImage.image = UIImage(named: "redBattery")
                         self.batteryLabel.textColor = UIColor.init(red: 231/255, green: 76/255, blue: 60/255, alpha: 1)
+                        
+                        if battery < DroneCmd.batteryCriticalLevel {
+                            self.isExhaused = true
+                            self.statusLabel.text = "Low battery, don't fly"
+                        }
                     }
                     
                 }
@@ -247,8 +262,9 @@ class ConnectViewController: UIViewController {
             }
             
             // convert -y -> pitch, x -> roll
-            pitch = -analogScaleChange(y, fromRange: joystickRadius, toRange: 100)
-            roll = analogScaleChange(x, fromRange: joystickRadius, toRange: 100)
+            // it moves so fast and easily out of control, let make it in scale of 50
+            pitch = -analogScaleChange(y, fromRange: joystickRadius, toRange: 50)
+            roll = analogScaleChange(x, fromRange: joystickRadius, toRange: 50)
         }
         
         if state == .ended {
@@ -264,11 +280,20 @@ class ConnectViewController: UIViewController {
 
 extension ConnectViewController {
     
+    func resetControl() {
+        timerTXDelay?.invalidate()
+        throttle = 0
+        yaw = 0
+        pitch = 0
+        roll = 0
+    }
+    
     @IBAction func estop(_ sender: UIButton) {
         if isFlying {
             print("send command: estop")
             
             if let bleService = btDiscoverySharedInstance.bleService {
+                resetControl()
                 bleService.writeCommand(DroneCmd.estopCmd)
                 statusLabel.text = "E-stop"
                 isFlying = false
@@ -282,6 +307,7 @@ extension ConnectViewController {
             print("send command: landing")
             
             if let bleService = btDiscoverySharedInstance.bleService {
+                resetControl()
                 bleService.writeCommand(DroneCmd.landingCmd)
                 statusLabel.text = "Landing"
                 isFlying = false
@@ -289,16 +315,21 @@ extension ConnectViewController {
             }
             
         } else {
-            print("send command: take off")
-            
-            if let bleService = btDiscoverySharedInstance.bleService {
-                bleService.writeCommand(DroneCmd.takeOffCmd)
-                statusLabel.text = "Take off"
-                isFlying = true
-                flightButton.setImage(UIImage(named: "landing"), for: UIControlState.normal)
+            if isExhaused {
+                print("Can't take off, low battery")
+                statusLabel.text = "Low battery, don't fly"
+            } else {
+                print("send command: take off")
                 
-                // Start to control
-                sendPosition(throttle, yaw: yaw, pitch: pitch, roll: roll)
+                if let bleService = btDiscoverySharedInstance.bleService {
+                    bleService.writeCommand(DroneCmd.takeOffCmd)
+                    statusLabel.text = "Take off"
+                    isFlying = true
+                    flightButton.setImage(UIImage(named: "landing"), for: UIControlState.normal)
+                    
+                    // Start to control
+                    timerTXDelay = Timer.scheduledTimer(timeInterval: DroneCmd.sendControlFrequency, target: self, selector: #selector(self.sendPosition), userInfo: nil, repeats: true)
+                }
             }
         }
     }
@@ -309,38 +340,28 @@ extension ConnectViewController {
         }
     }
     
-    func sendPosition(_ throttle: Int8, yaw: Int8, pitch: Int8, roll: Int8) {
+    func sendPosition() {
         
-        if !allowTX || !isFlying {
+        if !isFlying {
             return
         }
+        
+        // if nothing has change then don't send?
+        if (preThrottle == throttle) && (preYaw == yaw) &&
+            (prePitch == pitch) && (preRoll == roll) {
+            return
+        }
+        
+        preThrottle = throttle
+        preYaw = yaw
+        prePitch = pitch
+        preRoll = roll
         
         // Send position to BLE Shield (if service exists and is connected)
         if let bleService = btDiscoverySharedInstance.bleService {
-            bleService.writeCommand([])
-            
-            // Start delay timer
-            allowTX = false
-            if timerTXDelay == nil {
-                timerTXDelay = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.timerTXDelayElapsed), userInfo: nil, repeats: false)
-            }
+            print("control(r,p,y,t) = \(roll, pitch, yaw, throttle)")
+            bleService.writeCommand(DroneCmd.flightCommand(r: roll, p: pitch, y: yaw, t: throttle))
         }
     }
     
-    func timerTXDelayElapsed() {
-        self.allowTX = true
-        self.stopTimerTXDelay()
-        
-        // Send current slider position
-        self.sendPosition(throttle, yaw: yaw, pitch: pitch, roll: roll)
-    }
-    
-    func stopTimerTXDelay() {
-        if self.timerTXDelay == nil {
-            return
-        }
-        
-        timerTXDelay?.invalidate()
-        self.timerTXDelay = nil
-    }
 }

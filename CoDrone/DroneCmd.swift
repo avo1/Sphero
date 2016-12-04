@@ -11,7 +11,9 @@ import UIKit
 class DroneCmd: NSObject {
     
     static let batteryCheckFrequency: Double = 10.0   // every 10s
-    static let batteryCriticalLevel: UInt8 = 35
+    static let batteryWarningLevel: UInt8 = 35
+    static let batteryCriticalLevel: UInt8 = 15     // don't allow to fly
+    static let sendControlFrequency: Double = 0.1       // it's recommended for iOS to be 100ms
     
     // Frequently used commands
     static let takeOffCmd  = [DataType.Command.rawValue, CommandType.FlightEvent.rawValue, FlightEvent.TakeOff.rawValue]
@@ -19,10 +21,22 @@ class DroneCmd: NSObject {
     static let estopCmd    = [DataType.Command.rawValue, CommandType.FlightEvent.rawValue, FlightEvent.Stop.rawValue]
     static let checkBatteryCmd = [DataType.Request.rawValue, DataType.State.rawValue]
     
-    static func flightCommand() -> [UInt8] {
-        return [0x00]
+    static func flightCommand(r: Int8, p: Int8, y: Int8, t: Int8) -> [UInt8] {
+//        return [Int8(DataType.Control.rawValue), r, p, y, t]
+        
+        var packet = [Int8(DataType.Control.rawValue)]
+        
+        //data
+        packet.append(r)
+        packet.append(p)
+        packet.append(y)
+        packet.append(t)
+        
+        let uintArray = packet.map { UInt8(bitPattern: $0) }
+        
+        return uintArray
+        
     }
-    
     
     /************************************************************************************/
     /*                      Data to be transferred to the drone                         */
@@ -39,24 +53,24 @@ class DroneCmd: NSObject {
         // control, command
         case    Control	= 0x10,         ///<	control
                 Command,                ///<	command
-                Command2,               ///<	multiple command (command	1,	2)
-                Command3                ///<	multiple command (command	1,	2,	3)
+                Command2,               ///<	multiple command (command 1, 2)
+                Command3                ///<	multiple command (command 1, 2, 3)
         
         // LED
-        case    LedMode	= 0x20,         ///<    set	single LED	mode
-                LedMode2,               ///<	set	double LED	mode
-                LedModeCommand,         ///<	LED	mode, command
-                LedModeCommandIr,       ///<	LED	mode, command, IR data transfer
-                LedModeColor,           ///<    LED	mode, set single RGB color respectively
-                LedModeColor2,          ///<	LED	mode, set double RGB color respectively
+        case    LedMode	= 0x20,         ///<    set	single LED mode
+                LedMode2,               ///<	set	double LED mode
+                LedModeCommand,         ///<	LED mode, command
+                LedModeCommandIr,       ///<	LED mode, command, IR data transfer
+                LedModeColor,           ///<    LED mode, set single RGB color respectively
+                LedModeColor2,          ///<	LED mode, set double RGB color respectively
                 LedEvent,               ///<	single LED event
                 LedEvent2,              ///<	double LED event
-                LedEventCommand,        ///<	LED	event, command
-                LedEventCommandIr,      ///<	LED	event, command, IR data transfer
-                LedEventColor,          ///<	LED	event, set single RGB color respectively
-                LedEventColor2,         ///<	LED	event, set double RGB color respectively
-                LedModeDefaultColor,    ///<	LED	default	mode, set single RGB color respectively
-                LedModeDefaultColor2    ///<	LED	default	mode, set double RGB color respectively
+                LedEventCommand,        ///<	LED event, command
+                LedEventCommandIr,      ///<	LED event, command, IR data transfer
+                LedEventColor,          ///<	LED event, set single RGB color respectively
+                LedEventColor2,         ///<	LED event, set double RGB color respectively
+                LedModeDefaultColor,    ///<	LED default	mode, set single RGB color respectively
+                LedModeDefaultColor2    ///<	LED default	mode, set double RGB color respectively
         
         // drone condition
         case    Address	= 0x30,         ///<	IEEE address
@@ -83,7 +97,7 @@ class DroneCmd: NSObject {
     /************************************************************************************/
     
     enum CommandType: UInt8 {
-        case    None	= 0                 ///<	no event
+        case    None = 0                ///<	no event
         //	setting
         case    ModePetrone = 0x10      ///<	change petrone mode
         //	control
