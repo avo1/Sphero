@@ -223,6 +223,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="batteryImage" destination="5Py-oi-0MD" id="FFY-Gk-dV4"/>
+                        <outlet property="batteryLabel" destination="wNG-vh-lhA" id="GRX-S5-SF6"/>
                         <outlet property="connectButton" destination="AxP-2Q-b9V" id="00B-rb-JPT"/>
                         <outlet property="deviceLabel" destination="3WU-7F-QaI" id="96M-Qz-wMn"/>
                         <outlet property="flightButton" destination="4kq-Wm-9A6" id="aNV-CF-G9N"/>

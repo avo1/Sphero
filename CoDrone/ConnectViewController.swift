@@ -19,6 +19,9 @@ class ConnectViewController: UIViewController {
     @IBOutlet weak var rightJoystickImage: UIImageView!
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var rightButton: UIButton!
+    @IBOutlet weak var batteryImage: UIImageView!
+    @IBOutlet weak var batteryLabel: UILabel!
+    
     
     var isFlying = false
     var isConnected = false
@@ -29,13 +32,12 @@ class ConnectViewController: UIViewController {
     
     // For transmission
     var timerTXDelay: Timer?
+    var timerBatteryCheck: Timer?
     var allowTX = true
     var throttle: Int8 = 0
     var yaw: Int8 = 0
     var pitch: Int8 = 0
     var roll: Int8 = 0
-    
-    var isDebuging = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,16 +48,16 @@ class ConnectViewController: UIViewController {
         _ = btDiscoverySharedInstance
         
         // Watch Bluetooth connection
-        NotificationCenter.default.addObserver(self, selector: #selector(ConnectViewController.connectionChanged(_:)), name: NSNotification.Name(rawValue: BLEServiceChangedStatusNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.connectionChanged(_:)), name: NSNotification.Name(rawValue: BLEServiceChangedStatusNotification), object: nil)
         
-        // debug
-        if isDebuging {
-            sendPosition(throttle, yaw: yaw, pitch: pitch, roll: roll)
-        }
+        // Watch battery percentage
+        NotificationCenter.default.addObserver(self, selector: #selector(self.batteryUpdated(_:)), name: NSNotification.Name(rawValue: BatteryStatusNotification), object: nil)
+        
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: BLEServiceChangedStatusNotification), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: BatteryStatusNotification), object: nil)
     }
     
     func initialize() {
@@ -65,9 +67,10 @@ class ConnectViewController: UIViewController {
         connectButton.layer.borderWidth = 2
         connectButton.clipsToBounds = true
         setConnectButton(isConnected: false)
-
+        batteryLabel.text = ""
+        
         view.layoutIfNeeded()
-        print("left center = \(leftJoystickImage.center)")
+        //print("left center = \(leftJoystickImage.center)")
         joystickRadius = leftJoystickImage.bounds.width / 2 - 10.0
         leftButtonCenter = leftJoystickImage.center
         rightButtonCenter = rightJoystickImage.center
@@ -103,30 +106,73 @@ class ConnectViewController: UIViewController {
     
     func connectionChanged(_ notification: Notification) {
         // Connection status changed. Indicate on GUI.
-        let userInfo = (notification as NSNotification).userInfo as! [String: Bool]
-        
-        DispatchQueue.main.async(execute: {
-            // Set image based on connection status
-            if let connected: Bool = userInfo["isConnected"] {
-                self.isConnected = connected
-                self.setConnectButton(isConnected: connected)
-                
-                if connected {
-                    self.deviceLabel.text = btDiscoverySharedInstance.deviceName
-                    self.statusLabel.text = "Drone is connected"
+        if let userInfo = (notification as NSNotification).userInfo as? [String: Bool] {
+            
+            DispatchQueue.main.async(execute: {
+                // Set image based on connection status
+                if let connected: Bool = userInfo["isConnected"] {
+                    self.isConnected = connected
+                    self.setConnectButton(isConnected: connected)
                     
-                    SwiftSpinner.sharedInstance.innerColor = UIColor.green.withAlphaComponent(0.5)
-                    SwiftSpinner.show("Connected", animated: false).delay(0.7, completion: {
-                        // return to default color
-                        SwiftSpinner.sharedInstance.innerColor = UIColor.gray
-                        SwiftSpinner.hide()
-                    })
-                    
-                } else {
-                    self.statusLabel.text = "Drone is disconnected"
+                    if connected {
+                        self.deviceLabel.text = btDiscoverySharedInstance.deviceName
+                        self.statusLabel.text = "Drone is connected"
+                        
+                        SwiftSpinner.sharedInstance.innerColor = UIColor.green.withAlphaComponent(0.5)
+                        SwiftSpinner.show("Connected", animated: false).delay(0.7, completion: {
+                            // return to default color
+                            SwiftSpinner.sharedInstance.innerColor = UIColor.gray
+                            SwiftSpinner.hide()
+                            
+                            // start to check the battery
+                            if let bleService = btDiscoverySharedInstance.bleService {
+                                bleService.writeCommand(DroneCmd.checkBatteryCmd)
+                                
+                                self.timerBatteryCheck = Timer.scheduledTimer(timeInterval: DroneCmd.batteryCheckFrequency,
+                                                                              target: self,
+                                                                              selector: #selector(self.checkBattery),
+                                                                              userInfo: nil,
+                                                                              repeats: true)
+                            }
+                            
+                        })
+                        
+                    } else {
+                        self.statusLabel.text = "Drone is disconnected"
+                        self.isFlying = false
+                        self.flightButton.setImage(UIImage(named: "takeoff"), for: UIControlState.normal)
+                        
+                    }
                 }
-            }
-        })
+            })
+        }
+    }
+    
+    func batteryUpdated(_ notification: Notification) {
+        // Battery updated. Indicate on GUI.
+        if let userInfo = (notification as NSNotification).userInfo as? [String: UInt8] {
+            
+            DispatchQueue.main.async(execute: {
+                // Set image based on connection status
+                if let battery: UInt8 = userInfo["battery"] {
+                    print("battery = \(battery)")
+                    if battery == 100 {
+                        self.batteryLabel.text = "100%"
+                    } else {
+                        self.batteryLabel.text = String(battery) + " %"
+                    }
+                    
+                    if battery > DroneCmd.batteryCriticalLevel {
+                        self.batteryImage.image = UIImage(named: "greenBattery")
+                        self.batteryLabel.textColor = UIColor.init(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
+                    } else {
+                        self.batteryImage.image = UIImage(named: "redBattery")
+                        self.batteryLabel.textColor = UIColor.init(red: 231/255, green: 76/255, blue: 60/255, alpha: 1)
+                    }
+                    
+                }
+            })
+        }
     }
     
     @IBAction func scanPeripheral(_ sender: UIButton) {
@@ -162,7 +208,7 @@ class ConnectViewController: UIViewController {
             var y = translation.y
             let d = x * x + y * y
             if d <= joystickRadius * joystickRadius {
-                 leftButton.center = CGPoint(x: leftButtonCenter.x + x, y: leftButtonCenter.y + y)
+                leftButton.center = CGPoint(x: leftButtonCenter.x + x, y: leftButtonCenter.y + y)
             } else {
                 let k = sqrt(d) / joystickRadius
                 x = x/k
@@ -257,15 +303,13 @@ extension ConnectViewController {
         }
     }
     
-    func sendPosition(_ throttle: Int8, yaw: Int8, pitch: Int8, roll: Int8) {
-        if isDebuging {
-            print("update \(throttle, yaw, pitch, roll)")
-            // Start delay timer
-            allowTX = false
-            if timerTXDelay == nil {
-                timerTXDelay = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerTXDelayElapsed), userInfo: nil, repeats: false)
-            }
+    func checkBattery() {
+        if let bleService = btDiscoverySharedInstance.bleService {
+            bleService.writeCommand(DroneCmd.checkBatteryCmd)
         }
+    }
+    
+    func sendPosition(_ throttle: Int8, yaw: Int8, pitch: Int8, roll: Int8) {
         
         if !allowTX || !isFlying {
             return

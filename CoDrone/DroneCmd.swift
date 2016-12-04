@@ -10,10 +10,14 @@ import UIKit
 
 class DroneCmd: NSObject {
     
+    static let batteryCheckFrequency: Double = 10.0   // every 10s
+    static let batteryCriticalLevel: UInt8 = 35
+    
     // Frequently used commands
     static let takeOffCmd  = [DataType.Command.rawValue, CommandType.FlightEvent.rawValue, FlightEvent.TakeOff.rawValue]
     static let landingCmd  = [DataType.Command.rawValue, CommandType.FlightEvent.rawValue, FlightEvent.Landing.rawValue]
     static let estopCmd    = [DataType.Command.rawValue, CommandType.FlightEvent.rawValue, FlightEvent.Stop.rawValue]
+    static let checkBatteryCmd = [DataType.Request.rawValue, DataType.State.rawValue]
     
     static func flightCommand() -> [UInt8] {
         return [0x00]

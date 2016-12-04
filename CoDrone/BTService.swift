@@ -19,6 +19,8 @@ let DRONE_DATA_UUID =    CBUUID(string: "C320DF01-7891-11E5-8BCF-FEFF819CDC9F") 
 let DRONE_CONF_UUID =    CBUUID(string: "C320DF02-7891-11E5-8BCF-FEFF819CDC9F")  // Write
 
 let BLEServiceChangedStatusNotification = "kBLEServiceChangedStatusNotification"
+let BatteryStatusNotification = "kBatteryStatusNotification"
+
 
 class BTService: NSObject, CBPeripheralDelegate {
     var peripheral: CBPeripheral?
@@ -92,7 +94,22 @@ class BTService: NSObject, CBPeripheralDelegate {
                     
                     // Send notification that Bluetooth is connected and all required characteristics are discovered
                     self.sendBTServiceNotificationWithIsBluetoothConnected(true)
+                    
+                } else if aChar.uuid == DRONE_DATA_UUID {
+                    peripheral.setNotifyValue(true, for: aChar)
                 }
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        var batteryPercentage: UInt8 = 0
+        
+        if characteristic.uuid == DRONE_DATA_UUID {
+            if let data = characteristic.value {
+                batteryPercentage = UInt8(data.last!)
+                // Send notification that battery status is constantly updated
+                self.sendBTServiceNotificationWithBatteryStatus(batteryPercentage)
             }
         }
     }
@@ -110,6 +127,11 @@ class BTService: NSObject, CBPeripheralDelegate {
     func sendBTServiceNotificationWithIsBluetoothConnected(_ isBluetoothConnected: Bool) {
         let connectionDetails = ["isConnected": isBluetoothConnected]
         NotificationCenter.default.post(name: Notification.Name(rawValue: BLEServiceChangedStatusNotification), object: self, userInfo: connectionDetails)
+    }
+    
+    func sendBTServiceNotificationWithBatteryStatus(_ batteryLevel: UInt8) {
+        let battery = ["battery": batteryLevel]
+        NotificationCenter.default.post(name: Notification.Name(rawValue: BatteryStatusNotification), object: self, userInfo: battery)
     }
     
 }
