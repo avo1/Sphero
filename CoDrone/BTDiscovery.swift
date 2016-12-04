@@ -12,7 +12,7 @@
 import Foundation
 import CoreBluetooth
 
-let btDiscoverySharedInstance = BTDiscovery();
+let btDiscoverySharedInstance = BTDiscovery()
 
 class BTDiscovery: NSObject, CBCentralManagerDelegate {
     
@@ -28,6 +28,7 @@ class BTDiscovery: NSObject, CBCentralManagerDelegate {
     }
     
     func startScanning() {
+        print("start scanning")
         if let central = centralManager {
             central.scanForPeripherals(withServices: nil, options: nil)
         }
@@ -115,19 +116,18 @@ class BTDiscovery: NSObject, CBCentralManagerDelegate {
             self.bleService = nil;
             self.peripheralBLE = nil;
         }
-        
-        // Start scanning for new devices
-        self.startScanning()
     }
     
     // MARK: - Private
     
     func clearDevices() {
+        if let peripheral = self.peripheralBLE {
+            print("cancel connection")
+            self.centralManager?.cancelPeripheralConnection(peripheral)
+        }
         self.bleService = nil
         self.peripheralBLE = nil
     }
-    
-    
     
 }
 

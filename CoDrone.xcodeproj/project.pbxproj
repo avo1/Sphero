@@ -10,6 +10,7 @@
 		18488FA91DF2F15000396B7A /* BTDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18488FA81DF2F15000396B7A /* BTDiscovery.swift */; };
 		18488FAB1DF2F1EB00396B7A /* BTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18488FAA1DF2F1EB00396B7A /* BTService.swift */; };
 		18488FB11DF31CBA00396B7A /* SwiftSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18488FB01DF31CBA00396B7A /* SwiftSpinner.swift */; };
+		18488FB31DF3B8BF00396B7A /* DroneCmd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18488FB21DF3B8BF00396B7A /* DroneCmd.swift */; };
 		18CBCCE41DEB36D500EFBBD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CBCCE31DEB36D500EFBBD2 /* AppDelegate.swift */; };
 		18CBCCE91DEB36D500EFBBD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18CBCCE71DEB36D500EFBBD2 /* Main.storyboard */; };
 		18CBCCEB1DEB36D500EFBBD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18CBCCEA1DEB36D500EFBBD2 /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 		18488FA81DF2F15000396B7A /* BTDiscovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTDiscovery.swift; sourceTree = "<group>"; };
 		18488FAA1DF2F1EB00396B7A /* BTService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTService.swift; sourceTree = "<group>"; };
 		18488FB01DF31CBA00396B7A /* SwiftSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSpinner.swift; sourceTree = "<group>"; };
+		18488FB21DF3B8BF00396B7A /* DroneCmd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DroneCmd.swift; sourceTree = "<group>"; };
 		18CBCCE01DEB36D500EFBBD2 /* CoDrone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoDrone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CBCCE31DEB36D500EFBBD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18CBCCE81DEB36D500EFBBD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -41,19 +43,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		18488FA71DF2F08E00396B7A /* BTManager */ = {
-			isa = PBXGroup;
-			children = (
-				18488FA81DF2F15000396B7A /* BTDiscovery.swift */,
-				18488FAA1DF2F1EB00396B7A /* BTService.swift */,
-			);
-			name = BTManager;
-			sourceTree = "<group>";
-		};
 		18488FAF1DF31CA600396B7A /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				18488FB21DF3B8BF00396B7A /* DroneCmd.swift */,
 				18488FB01DF31CBA00396B7A /* SwiftSpinner.swift */,
+				18488FA81DF2F15000396B7A /* BTDiscovery.swift */,
+				18488FAA1DF2F1EB00396B7A /* BTService.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -78,7 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				18488FAF1DF31CA600396B7A /* Classes */,
-				18488FA71DF2F08E00396B7A /* BTManager */,
 				18CBCCE31DEB36D500EFBBD2 /* AppDelegate.swift */,
 				18CBCCE71DEB36D500EFBBD2 /* Main.storyboard */,
 				18CBCCF51DEB404800EFBBD2 /* ConnectViewController.swift */,
@@ -164,6 +159,7 @@
 			files = (
 				18488FB11DF31CBA00396B7A /* SwiftSpinner.swift in Sources */,
 				18CBCCE41DEB36D500EFBBD2 /* AppDelegate.swift in Sources */,
+				18488FB31DF3B8BF00396B7A /* DroneCmd.swift in Sources */,
 				18488FAB1DF2F1EB00396B7A /* BTService.swift in Sources */,
 				18488FA91DF2F15000396B7A /* BTDiscovery.swift in Sources */,
 				18CBCCF61DEB404800EFBBD2 /* ConnectViewController.swift in Sources */,
