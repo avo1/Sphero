@@ -39,6 +39,7 @@ class BTService: NSObject, CBPeripheralDelegate {
     
     func startDiscoveringServices() {
         self.peripheral?.discoverServices([DRONE_SERVICE_UUID])
+        //self.peripheral?.discoverServices(nil)
     }
     
     func reset() {
@@ -70,6 +71,7 @@ class BTService: NSObject, CBPeripheralDelegate {
         }
         
         for service in peripheral.services! {
+            print("service uuid = \(service.uuid)")
             if service.uuid == DRONE_SERVICE_UUID {
                 peripheral.discoverCharacteristics(uuidsForBTService, for: service)
             }

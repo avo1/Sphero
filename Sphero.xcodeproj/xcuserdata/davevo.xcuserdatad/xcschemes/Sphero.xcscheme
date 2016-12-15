@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "18CBCCDF1DEB36D500EFBBD2"
-               BuildableName = "CoDrone.app"
-               BlueprintName = "CoDrone"
-               ReferencedContainer = "container:CoDrone.xcodeproj">
+               BuildableName = "Sphero.app"
+               BlueprintName = "Sphero"
+               ReferencedContainer = "container:Sphero.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "18CBCCDF1DEB36D500EFBBD2"
-            BuildableName = "CoDrone.app"
-            BlueprintName = "CoDrone"
-            ReferencedContainer = "container:CoDrone.xcodeproj">
+            BuildableName = "Sphero.app"
+            BlueprintName = "Sphero"
+            ReferencedContainer = "container:Sphero.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,11 +56,18 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "18CBCCDF1DEB36D500EFBBD2"
-            BuildableName = "CoDrone.app"
-            BlueprintName = "CoDrone"
-            ReferencedContainer = "container:CoDrone.xcodeproj">
+            BuildableName = "Sphero.app"
+            BlueprintName = "Sphero"
+            ReferencedContainer = "container:Sphero.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "Disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -75,9 +82,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "18CBCCDF1DEB36D500EFBBD2"
-            BuildableName = "CoDrone.app"
-            BlueprintName = "CoDrone"
-            ReferencedContainer = "container:CoDrone.xcodeproj">
+            BuildableName = "Sphero.app"
+            BlueprintName = "Sphero"
+            ReferencedContainer = "container:Sphero.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

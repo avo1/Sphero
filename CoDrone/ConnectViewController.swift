@@ -120,6 +120,7 @@ class ConnectViewController: UIViewController {
                 if let connected: Bool = userInfo["isConnected"] {
                     self.isConnected = connected
                     self.setConnectButton(isConnected: connected)
+                    print("Connection status = \(connected)")
                     
                     if connected {
                         self.deviceLabel.text = btDiscoverySharedInstance.deviceName
@@ -346,16 +347,19 @@ extension ConnectViewController {
             return
         }
         
-        // if nothing has change then don't send?
-        if (preThrottle == throttle) && (preYaw == yaw) &&
-            (prePitch == pitch) && (preRoll == roll) {
-            return
-        }
+        // there's something weird here, regarding to this code,
+        // after taking off ~5-10s the drone will auto stop?
         
-        preThrottle = throttle
-        preYaw = yaw
-        prePitch = pitch
-        preRoll = roll
+        // if nothing has change then don't send?
+//        if (preThrottle == throttle) && (preYaw == yaw) &&
+//            (prePitch == pitch) && (preRoll == roll) {
+//            return
+//        }
+//        
+//        preThrottle = throttle
+//        preYaw = yaw
+//        prePitch = pitch
+//        preRoll = roll
         
         // Send position to BLE Shield (if service exists and is connected)
         if let bleService = btDiscoverySharedInstance.bleService {

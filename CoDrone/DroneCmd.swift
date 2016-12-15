@@ -22,19 +22,9 @@ class DroneCmd: NSObject {
     static let checkBatteryCmd = [DataType.Request.rawValue, DataType.State.rawValue]
     
     static func flightCommand(r: Int8, p: Int8, y: Int8, t: Int8) -> [UInt8] {
-//        return [Int8(DataType.Control.rawValue), r, p, y, t]
         
-        var packet = [Int8(DataType.Control.rawValue)]
-        
-        //data
-        packet.append(r)
-        packet.append(p)
-        packet.append(y)
-        packet.append(t)
-        
-        let uintArray = packet.map { UInt8(bitPattern: $0) }
-        
-        return uintArray
+        let packet = [Int8(DataType.Control.rawValue), r, p, y, t]
+        return packet.map { UInt8(bitPattern: $0) }
         
     }
     

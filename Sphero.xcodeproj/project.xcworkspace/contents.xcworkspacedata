@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:CoDrone.xcodeproj">
+      location = "self:/Users/davevo/Documents/Developer/Xcode/CoderSchool/Sphero/Sphero.xcodeproj">
    </FileRef>
 </Workspace>

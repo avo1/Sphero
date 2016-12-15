@@ -23,7 +23,7 @@
 		18488FAA1DF2F1EB00396B7A /* BTService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTService.swift; sourceTree = "<group>"; };
 		18488FB01DF31CBA00396B7A /* SwiftSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSpinner.swift; sourceTree = "<group>"; };
 		18488FB21DF3B8BF00396B7A /* DroneCmd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DroneCmd.swift; sourceTree = "<group>"; };
-		18CBCCE01DEB36D500EFBBD2 /* CoDrone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoDrone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CBCCE01DEB36D500EFBBD2 /* Sphero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sphero.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CBCCE31DEB36D500EFBBD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18CBCCE81DEB36D500EFBBD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		18CBCCEA1DEB36D500EFBBD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 		18CBCCD71DEB36D500EFBBD2 = {
 			isa = PBXGroup;
 			children = (
-				18CBCCE21DEB36D500EFBBD2 /* CoDrone */,
+				18CBCCE21DEB36D500EFBBD2 /* Sphero */,
 				18CBCCE11DEB36D500EFBBD2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,12 +65,12 @@
 		18CBCCE11DEB36D500EFBBD2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				18CBCCE01DEB36D500EFBBD2 /* CoDrone.app */,
+				18CBCCE01DEB36D500EFBBD2 /* Sphero.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		18CBCCE21DEB36D500EFBBD2 /* CoDrone */ = {
+		18CBCCE21DEB36D500EFBBD2 /* Sphero */ = {
 			isa = PBXGroup;
 			children = (
 				18488FAF1DF31CA600396B7A /* Classes */,
@@ -81,15 +81,16 @@
 				18CBCCEC1DEB36D500EFBBD2 /* LaunchScreen.storyboard */,
 				18CBCCEF1DEB36D500EFBBD2 /* Info.plist */,
 			);
+			name = Sphero;
 			path = CoDrone;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		18CBCCDF1DEB36D500EFBBD2 /* CoDrone */ = {
+		18CBCCDF1DEB36D500EFBBD2 /* Sphero */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 18CBCCF21DEB36D500EFBBD2 /* Build configuration list for PBXNativeTarget "CoDrone" */;
+			buildConfigurationList = 18CBCCF21DEB36D500EFBBD2 /* Build configuration list for PBXNativeTarget "Sphero" */;
 			buildPhases = (
 				18CBCCDC1DEB36D500EFBBD2 /* Sources */,
 				18CBCCDD1DEB36D500EFBBD2 /* Frameworks */,
@@ -99,9 +100,9 @@
 			);
 			dependencies = (
 			);
-			name = CoDrone;
+			name = Sphero;
 			productName = CoDrone;
-			productReference = 18CBCCE01DEB36D500EFBBD2 /* CoDrone.app */;
+			productReference = 18CBCCE01DEB36D500EFBBD2 /* Sphero.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -121,7 +122,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 18CBCCDB1DEB36D500EFBBD2 /* Build configuration list for PBXProject "CoDrone" */;
+			buildConfigurationList = 18CBCCDB1DEB36D500EFBBD2 /* Build configuration list for PBXProject "Sphero" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -134,7 +135,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				18CBCCDF1DEB36D500EFBBD2 /* CoDrone */,
+				18CBCCDF1DEB36D500EFBBD2 /* Sphero */,
 			);
 		};
 /* End PBXProject section */
@@ -289,7 +290,7 @@
 				INFOPLIST_FILE = CoDrone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drm.CoDrone;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drm.Sphero;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -303,7 +304,7 @@
 				INFOPLIST_FILE = CoDrone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drm.CoDrone;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drm.Sphero;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -312,7 +313,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		18CBCCDB1DEB36D500EFBBD2 /* Build configuration list for PBXProject "CoDrone" */ = {
+		18CBCCDB1DEB36D500EFBBD2 /* Build configuration list for PBXProject "Sphero" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				18CBCCF01DEB36D500EFBBD2 /* Debug */,
@@ -321,7 +322,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		18CBCCF21DEB36D500EFBBD2 /* Build configuration list for PBXNativeTarget "CoDrone" */ = {
+		18CBCCF21DEB36D500EFBBD2 /* Build configuration list for PBXNativeTarget "Sphero" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				18CBCCF31DEB36D500EFBBD2 /* Debug */,
